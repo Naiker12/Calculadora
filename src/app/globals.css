@@ -4,66 +4,66 @@
 
 @layer base {
   :root {
-    /* === BASE COLORS (modo claro opcional, dejamos igual) === */
-    --background: 224 71% 4%; 
-    --foreground: 213 31% 91%;
+    /* === MIDNIGHT PROFESSIONAL THEME === */
+    /* Fondo principal - Azul oscuro profundo */
+    --background: 225 60% 8%;  /* #0A0E1F */
+    --foreground: 210 40% 96%; /* Texto casi blanco con tinte azul */
 
     /* === Tarjetas y contenedores === */
-    --card: 220 13% 15%; /* Un poco más oscuro para contraste */
-    --card-foreground: 213 31% 91%;
+    --card: 225 45% 12%;       /* #151B3D - Azul medio oscuro */
+    --card-foreground: 210 40% 96%;
 
-    --popover: 224 71% 4%;
-    --popover-foreground: 213 31% 91%;
+    --popover: 225 45% 12%;
+    --popover-foreground: 210 40% 96%;
 
-    /* === Color principal (azul-cian brillante) === */
-    --primary: 199 89% 58%; /* #06b6d4, cian neón */
-    --primary-foreground: 210 20% 98%;
+    /* === Color principal (azul brillante) === */
+    --primary: 217 91% 60%;    /* #3B82F6 - Azul brillante */
+    --primary-foreground: 210 40% 98%;
 
-    /* === Secundario (gris más oscuro, para inputs y fondos suaves) === */
-    --secondary: 220 13% 18%;
-    --secondary-foreground: 210 20% 98%;
+    /* === Secundario (para inputs y fondos suaves) === */
+    --secondary: 225 35% 15%;  /* #1E293B - Más oscuro que card */
+    --secondary-foreground: 210 40% 96%;
 
-    /* === Textos secundarios / mutados === */
-    --muted: 220 10% 45%;
-    --muted-foreground: 220 13% 65%;
+    /* === Textos secundarios === */
+    --muted: 215 20% 35%;      /* Gris azulado medio */
+    --muted-foreground: 215 16% 65%; /* #94A3B8 - Texto secundario */
 
-    /* === Acentos === */
-    --accent: 217 91% 65%; /* Azul más brillante (hover) */
-    --accent-foreground: 210 20% 98%;
+    /* === Acentos (hover states) === */
+    --accent: 262 83% 65%;     /* #8B5CF6 - Púrpura para tabs */
+    --accent-foreground: 210 40% 98%;
 
-    /* === Errores / Alertas === */
-    --destructive: 0 63% 40%;
-    --destructive-foreground: 210 20% 98%;
+    /* === Errores === */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
 
     /* === Bordes e inputs === */
-    --border: 220 13% 25%;
-    --input: 220 13% 25%;
-    --ring: 199 89% 58%;
+    --border: 225 30% 20%;     /* #2A3347 - Más visible */
+    --input: 225 30% 18%;      /* Inputs oscuros */
+    --ring: 217 91% 60%;       /* Ring azul brillante */
 
     --radius: 0.5rem;
   }
 
-  /* === DARK MODE === */
   .dark {
-    --background: 225 10% 4%;
-    --foreground: 213 31% 91%;
-    --card: 220 13% 12%;
-    --card-foreground: 213 31% 91%;
-    --popover: 225 10% 4%;
-    --popover-foreground: 213 31% 91%;
-    --primary: 199 89% 58%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 220 13% 18%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 220 10% 45%;
-    --muted-foreground: 220 13% 65%;
-    --accent: 217 91% 65%;
-    --accent-foreground: 210 20% 98%;
-    --destructive: 0 63% 40%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 220 13% 25%;
-    --input: 220 13% 25%;
-    --ring: 199 89% 58%;
+    --background: 225 60% 8%;
+    --foreground: 210 40% 96%;
+    --card: 225 45% 12%;
+    --card-foreground: 210 40% 96%;
+    --popover: 225 45% 12%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 225 35% 15%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 215 20% 35%;
+    --muted-foreground: 215 16% 65%;
+    --accent: 262 83% 65%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 225 30% 20%;
+    --input: 225 30% 18%;
+    --ring: 217 91% 60%;
   }
 }
 
@@ -73,7 +73,8 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-color: #0b0b0b; /* Fondo negro profundo */
+    background: linear-gradient(to bottom, hsl(225, 60%, 8%), hsl(225, 50%, 6%));
+    min-height: 100vh;
   }
 }
 

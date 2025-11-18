@@ -10,7 +10,7 @@ export function Header() {
         <div className="mr-4 flex items-center">
           <Link href="/" className="flex items-center gap-2">
             <Sigma className="h-6 w-6 text-primary" />
-            <span className="font-bold">Calculator Online</span>
+            <span className="font-bold">Zero Finder X</span>
           </Link>
         </div>
       </div>

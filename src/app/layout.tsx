@@ -8,7 +8,7 @@ import { Sigma } from 'lucide-react';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'Calculadora NumSolver Pro',
+  title: 'Zero Finder X - Calculadora de Métodos Numéricos',
   description: 'Calculadora profesional de métodos numéricos.',
 };
 
@@ -27,7 +27,7 @@ export default function RootLayout({
                 <a className="mr-6 flex items-center space-x-2" href="/">
                   <Sigma className="h-6 w-6 text-primary" />
                   <span className="hidden font-bold sm:inline-block">
-                    Calculator Online
+                    Zero Finder X
                   </span>
                 </a>
               </div>
