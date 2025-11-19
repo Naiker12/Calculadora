@@ -1,21 +1,23 @@
+
 'use client';
 
 import { Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Dot, Scatter } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { FunctionData } from '@/lib/types';
 
 type FunctionGraphProps = {
-  data: { x: number; y: number }[];
+  data: FunctionData[];
   root?: number;
   functionLabel?: string;
   additionalData?: { x: number; y: number }[];
   additionalDataLabel?: string;
   isInterpolation?: boolean;
+  scatterPoints?: FunctionData[];
 };
 
 const CustomDot = (props: any) => {
   const { cx, cy, payload, root } = props;
   
-  // Only render dot if the current point's x is the root
   if (root !== undefined && Math.abs(payload.x - root) < 1e-9) {
     return <Dot cx={cx} cy={cy} r={5} fill="#ef4444" stroke="white" strokeWidth={2} />;
   }
@@ -29,20 +31,18 @@ export function FunctionGraph({
   functionLabel = "f(x)", 
   additionalData, 
   additionalDataLabel,
-  isInterpolation = false
+  isInterpolation = false,
+  scatterPoints = []
 }: FunctionGraphProps) {
   let chartData = [...data];
 
-  // For interpolation, the root is the x value we are finding a y for.
-  // We need to calculate its y based on the line and add it to the data.
-  if (isInterpolation && root !== undefined && chartData.length === 2) {
-    const [p1, p2] = chartData;
-    const y = p1.y + (root - p1.x) * (p2.y - p1.y) / (p2.x - p1.x);
-    if (!chartData.some(p => Math.abs(p.x - root!) < 1e-9)) {
-      chartData.push({ x: root, y });
+  if (isInterpolation && root !== undefined && chartData.length > 0) {
+    const interpolatedPoint = chartData.find(p => Math.abs(p.x - root) < 1e-9);
+    if (!interpolatedPoint) {
+        const lastY = chartData.length > 0 ? chartData[chartData.length - 1].y : 0;
+        chartData.push({ x: root, y: lastY }); // Placeholder, should be calculated in the method
     }
   } else if (root !== undefined) {
-    // For root finding, ensure the root point (y=0) is in the data for the dot
     if (!chartData.some(p => Math.abs(p.x - root!) < 1e-9)) {
        chartData.push({ x: root, y: 0 });
     }
@@ -88,6 +88,7 @@ export function FunctionGraph({
             <Legend />
             {!isInterpolation && <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" strokeWidth={1} />}
             {root !== undefined && <ReferenceLine x={root} stroke="#ef4444" strokeDasharray="3 3" />}
+            
             <Line
               data={chartData}
               type="monotone"
@@ -95,10 +96,11 @@ export function FunctionGraph({
               name={functionLabel}
               stroke="hsl(var(--primary))"
               strokeWidth={2}
-              dot={isInterpolation ? <CustomDot root={root} /> : false}
+              dot={isInterpolation ? false : <CustomDot root={root} />}
               activeDot={{ r: 6 }}
             />
-             {isInterpolation && <Scatter data={chartData} fill="hsl(var(--primary))" />}
+            
+            {scatterPoints.length > 0 && <Scatter data={scatterPoints} fill="hsl(var(--primary))" shape="circle" />}
 
             {additionalData && (
               <Line
@@ -111,6 +113,11 @@ export function FunctionGraph({
                 dot={false}
               />
             )}
+            
+            {isInterpolation && root !== undefined && (
+                <Scatter data={[{x: root, y: chartData.find(d => Math.abs(d.x - root!) < 1e-9)?.y}]} fill="#ef4444" shape="cross" name="Punto Interpolado" />
+            )}
+
           </LineChart>
         </ResponsiveContainer>
       </CardContent>

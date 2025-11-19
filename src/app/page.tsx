@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -11,6 +12,8 @@ import { GaussSeidelPage } from '@/app/components/pages/gauss-seidel-page';
 import { JacobiPage } from '@/app/components/pages/jacobi-page';
 import { PageLoader } from '@/app/components/page-loader';
 import { LinearInterpolationPage } from '@/app/components/pages/linear-interpolation-page';
+import { QuadraticInterpolationPage } from './components/pages/quadratic-interpolation-form';
+
 
 const methods = [
   {
@@ -32,6 +35,11 @@ const methods = [
     value: 'interpolacion-lineal',
     label: 'Interpolación Lineal',
     component: <LinearInterpolationPage />,
+  },
+  {
+    value: 'interpolacion-cuadratica',
+    label: 'Interpolación Cuadrática',
+    component: <QuadraticInterpolationPage />,
   },
   {
     value: 'gauss-jordan',

@@ -1,3 +1,4 @@
+
 export type RootFindingIteration = {
   iteration: number;
   a?: number;
@@ -16,6 +17,8 @@ export type RootFindingResult = {
 export type InterpolationResult = {
   x: number;
   y: number | null;
+  polynomial?: string | null;
+  interpolatedFunction?: ((x: number) => number) | null;
   error: string | null;
 }
 
