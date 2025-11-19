@@ -10,6 +10,7 @@ import { GaussJordanPage } from '@/app/components/pages/gauss-jordan-page';
 import { GaussSeidelPage } from '@/app/components/pages/gauss-seidel-page';
 import { JacobiPage } from '@/app/components/pages/jacobi-page';
 import { PageLoader } from '@/app/components/page-loader';
+import { LinearInterpolationPage } from '@/app/components/pages/linear-interpolation-page';
 
 const methods = [
   {
@@ -26,6 +27,11 @@ const methods = [
     value: 'punto-fijo',
     label: 'Punto Fijo',
     component: <FixedPointPage />,
+  },
+  {
+    value: 'interpolacion-lineal',
+    label: 'Interpolación Lineal',
+    component: <LinearInterpolationPage />,
   },
   {
     value: 'gauss-jordan',

@@ -13,6 +13,12 @@ export type RootFindingResult = {
   error: string | null;
 };
 
+export type InterpolationResult = {
+  x: number;
+  y: number | null;
+  error: string | null;
+}
+
 export type MatrixStep = {
   step: number;
   description: string;
