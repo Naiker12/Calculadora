@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Dot, Scatter } from 'recharts';
+import { Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Dot, Scatter, AreaChart, Area } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { FunctionData } from '@/lib/types';
 
@@ -13,6 +13,8 @@ type FunctionGraphProps = {
   additionalDataLabel?: string;
   isInterpolation?: boolean;
   scatterPoints?: FunctionData[];
+  integrationArea?: { a: number, b: number };
+  trapezoids?: {x1: number, y1: number, x2: number, y2: number}[];
 };
 
 const CustomDot = (props: any) => {
@@ -32,7 +34,9 @@ export function FunctionGraph({
   additionalData, 
   additionalDataLabel,
   isInterpolation = false,
-  scatterPoints = []
+  scatterPoints = [],
+  integrationArea,
+  trapezoids = []
 }: FunctionGraphProps) {
   let chartData = [...data];
 
@@ -50,6 +54,91 @@ export function FunctionGraph({
 
   chartData.sort((a,b) => a.x - b.x);
 
+  const renderChart = () => {
+    if (integrationArea) {
+      const areaData = chartData.filter(p => p.x >= integrationArea.a && p.x <= integrationArea.b);
+      return (
+         <AreaChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
+            <XAxis dataKey="x" type="number" domain={['dataMin', 'dataMax']} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
+            <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
+            <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))' }} />
+            <Legend />
+            <Area type="monotone" dataKey="y" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.3} name={functionLabel} data={areaData} />
+            <Line type="monotone" dataKey="y" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} name={functionLabel} />
+            {trapezoids.map((trap, index) => (
+                <polygon key={index} points={`${trap.x1},${trap.y1} ${trap.x2},${trap.y2} ${trap.x2},0 ${trap.x1},0`} fill="hsl(var(--accent))" stroke="hsl(var(--accent-foreground))" strokeWidth="1" opacity="0.5" />
+            ))}
+         </AreaChart>
+      )
+    }
+
+    return (
+      <LineChart
+        data={chartData}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
+        <XAxis 
+          dataKey="x"
+          type="number"
+          domain={['dataMin', 'dataMax']}
+          tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+          tickLine={{ stroke: 'hsl(var(--border))' }}
+          axisLine={{ stroke: 'hsl(var(--border))' }}
+          allowDuplicatedCategory={false}
+        />
+        <YAxis
+          tickFormatter={(value) => new Intl.NumberFormat('es-ES').format(value)}
+          domain={['auto', 'auto']}
+          tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+          tickLine={{ stroke: 'hsl(var(--border))' }}
+          axisLine={{ stroke: 'hsl(var(--border))' }}
+        />
+        <Tooltip
+          contentStyle={{
+            backgroundColor: 'hsl(var(--background))',
+            borderColor: 'hsl(var(--border))',
+            borderRadius: 'var(--radius)',
+          }}
+          labelStyle={{ color: 'hsl(var(--foreground))' }}
+        />
+        <Legend />
+        {!isInterpolation && <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" strokeWidth={1} />}
+        {root !== undefined && <ReferenceLine x={root} stroke="#ef4444" strokeDasharray="3 3" />}
+        
+        <Line
+          type="monotone"
+          dataKey="y"
+          name={functionLabel}
+          stroke="hsl(var(--primary))"
+          strokeWidth={2}
+          dot={isInterpolation ? false : <CustomDot root={root} />}
+          activeDot={{ r: 6 }}
+        />
+        
+        {scatterPoints.length > 0 && <Scatter data={scatterPoints} fill="hsl(var(--primary))" shape="circle" />}
+
+        {additionalData && (
+          <Line
+            data={additionalData}
+            type="monotone"
+            dataKey="y"
+            name={additionalDataLabel}
+            stroke="hsl(var(--accent))"
+            strokeWidth={2}
+            dot={false}
+          />
+        )}
+        
+        {isInterpolation && root !== undefined && (
+            <Scatter data={[{x: root, y: chartData.find(d => Math.abs(d.x - root!) < 1e-9)?.y}]} fill="#ef4444" shape="cross" name="Punto Interpolado" />
+        )}
+
+      </LineChart>
+    )
+  }
+
   return (
     <Card className="w-full h-96">
       <CardHeader>
@@ -57,68 +146,7 @@ export function FunctionGraph({
       </CardHeader>
       <CardContent className="h-full pt-4">
         <ResponsiveContainer width="100%" height="85%">
-          <LineChart
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
-            <XAxis 
-              dataKey="x"
-              type="number"
-              domain={['dataMin', 'dataMax']}
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-              tickLine={{ stroke: 'hsl(var(--border))' }}
-              axisLine={{ stroke: 'hsl(var(--border))' }}
-              allowDuplicatedCategory={false}
-            />
-            <YAxis
-              tickFormatter={(value) => new Intl.NumberFormat('es-ES').format(value)}
-              domain={['auto', 'auto']}
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-              tickLine={{ stroke: 'hsl(var(--border))' }}
-              axisLine={{ stroke: 'hsl(var(--border))' }}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'hsl(var(--background))',
-                borderColor: 'hsl(var(--border))',
-                borderRadius: 'var(--radius)',
-              }}
-              labelStyle={{ color: 'hsl(var(--foreground))' }}
-            />
-            <Legend />
-            {!isInterpolation && <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" strokeWidth={1} />}
-            {root !== undefined && <ReferenceLine x={root} stroke="#ef4444" strokeDasharray="3 3" />}
-            
-            <Line
-              data={chartData}
-              type="monotone"
-              dataKey="y"
-              name={functionLabel}
-              stroke="hsl(var(--primary))"
-              strokeWidth={2}
-              dot={isInterpolation ? false : <CustomDot root={root} />}
-              activeDot={{ r: 6 }}
-            />
-            
-            {scatterPoints.length > 0 && <Scatter data={scatterPoints} fill="hsl(var(--primary))" shape="circle" />}
-
-            {additionalData && (
-              <Line
-                data={additionalData}
-                type="monotone"
-                dataKey="y"
-                name={additionalDataLabel}
-                stroke="hsl(var(--accent))"
-                strokeWidth={2}
-                dot={false}
-              />
-            )}
-            
-            {isInterpolation && root !== undefined && (
-                <Scatter data={[{x: root, y: chartData.find(d => Math.abs(d.x - root!) < 1e-9)?.y}]} fill="#ef4444" shape="cross" name="Punto Interpolado" />
-            )}
-
-          </LineChart>
+          {renderChart()}
         </ResponsiveContainer>
       </CardContent>
     </Card>

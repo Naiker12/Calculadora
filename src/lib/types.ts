@@ -22,6 +22,11 @@ export type InterpolationResult = {
   error: string | null;
 }
 
+export type IntegrationResult = {
+  integral: number | null;
+  error: string | null;
+};
+
 export type MatrixStep = {
   step: number;
   description: string;
